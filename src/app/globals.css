@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b0b0c;
+  --foreground: #f3f1ed;
+  --surface: #111112;
+  --muted: #a3a1a0;
+  --accent: #38bdf8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+* {
+  border-color: rgb(255 255 255 / 8%);
+}
+
+a {
+  transition: color 220ms ease, opacity 220ms ease;
+}
+
+::selection {
+  background: rgb(56 189 248 / 28%);
+  color: #f0f9ff;
+}
+
+@keyframes experience-shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-experience-shimmer {
+  animation: experience-shimmer 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-experience-shimmer {
+    animation: none;
+  }
+}
+
+/* Welcome: ondas con sensación 3D (perspectiva + relieve) */
+@keyframes welcome-wave-3d {
+  0% {
+    transform: scale(0.28) translateZ(0);
+    opacity: 0.72;
+    box-shadow:
+      0 28px 90px rgba(56, 189, 248, 0.32),
+      0 12px 40px rgba(0, 0, 0, 0.45),
+      inset 0 2px 0 rgba(255, 255, 255, 0.18);
+  }
+  40% {
+    opacity: 0.28;
+  }
+  100% {
+    transform: scale(2.05) translateZ(-24px);
+    opacity: 0;
+    box-shadow:
+      0 0 0 transparent,
+      0 0 0 transparent,
+      inset 0 0 0 transparent;
+  }
+}
+
+.welcome-wave-3d {
+  animation: welcome-wave-3d 3.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, box-shadow;
+}
+
+/* Avatar: ondas + ligero movimiento */
+@keyframes profile-wave-3d {
+  0% {
+    transform: scale(0.82);
+    opacity: 0.5;
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.28);
+  }
+  100% {
+    transform: scale(1.78);
+    opacity: 0;
+    box-shadow: 0 0 0 transparent;
+  }
+}
+
+.avatar-wave-ring {
+  animation: profile-wave-3d 2.75s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  transform-style: preserve-3d;
+}
+
+@keyframes avatar-face-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(56, 189, 248, 0.28) inset,
+      0 0 32px rgba(56, 189, 248, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 22px 56px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(56, 189, 248, 0.42) inset,
+      0 0 48px rgba(56, 189, 248, 0.26);
+  }
+}
+
+.avatar-face-glow {
+  animation: avatar-face-glow 3.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-wave-3d,
+  .avatar-wave-ring,
+  .avatar-face-glow {
+    animation: none;
+  }
+
+  .avatar-face-glow {
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(56, 189, 248, 0.28) inset;
+  }
+}
+
+/* Welcome intro: scanlines + caret “terminal” */
+.welcome-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    rgba(255, 255, 255, 0.04) 1px,
+    rgba(255, 255, 255, 0.04) 2px
+  );
+}
+
+.welcome-caret {
+  animation: welcome-caret-blink 0.62s steps(1, end) infinite;
+}
+
+@keyframes welcome-caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-caret {
+    animation: none;
+    opacity: 1;
+  }
+}

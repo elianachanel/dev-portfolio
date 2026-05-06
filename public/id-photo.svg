@@ -1,0 +1,9 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="1000" fill="#121317"/>
+  <circle cx="400" cy="350" r="150" fill="#2A2D34"/>
+  <rect x="235" y="520" width="330" height="260" rx="150" fill="#24272E"/>
+  <rect x="170" y="110" width="460" height="780" rx="28" stroke="#323741" stroke-width="2"/>
+  <text x="400" y="915" text-anchor="middle" fill="#BFC3CC" font-family="Arial, sans-serif" font-size="28">
+    Eliana Chanel
+  </text>
+</svg>
