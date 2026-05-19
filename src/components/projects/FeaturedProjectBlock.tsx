@@ -13,6 +13,10 @@ import {
   ProjectGalleryRail,
   type GalleryItem,
 } from "@/components/projects/ProjectGalleryRail";
+import {
+  resolveGalleryFrame,
+  type GalleryDevice,
+} from "@/components/projects/resolveGalleryFrame";
 import { easeOutExpo } from "@/lib/motion";
 
 export type FeaturedProject = {
@@ -23,6 +27,7 @@ export type FeaturedProject = {
   intro: string;
   bullets: string[];
   gallery: GalleryItem[];
+  galleryDevice?: GalleryDevice;
 };
 
 type Props = {
@@ -47,10 +52,19 @@ export function FeaturedProjectBlock({ project, index }: Props) {
   const bgX = useTransform(scrollYProgress, [0, 1], reversed ? [40, -40] : [-40, 40]);
 
   const active = project.gallery[activeShot] ?? project.gallery[0];
-  const phoneKeywords = ["mobile", "home", "booking", "discovery"];
-  const usePhoneFrame = phoneKeywords.some((k) =>
-    active.title.toLowerCase().includes(k),
-  );
+  const frameVariant = resolveGalleryFrame(active, project.galleryDevice);
+  const isMobileGallery = project.galleryDevice === "mobile";
+  const hasMultipleShots = project.gallery.length > 1;
+
+  const goToPrev = () => {
+    setActiveShot((current) => Math.max(0, current - 1));
+  };
+
+  const goToNext = () => {
+    setActiveShot((current) =>
+      Math.min(project.gallery.length - 1, current + 1),
+    );
+  };
 
   return (
     <motion.article
@@ -84,7 +98,7 @@ export function FeaturedProjectBlock({ project, index }: Props) {
           <div className="relative [perspective:1400px]">
             <motion.div
               aria-hidden
-              className="absolute -inset-4 rounded-[3rem] bg-gradient-to-br from-sky-500/20 via-transparent to-indigo-500/15 blur-2xl"
+              className="pointer-events-none absolute -inset-4 rounded-[3rem] bg-gradient-to-br from-sky-500/20 via-transparent to-indigo-500/15 blur-2xl"
               animate={
                 reduceMotion
                   ? undefined
@@ -93,22 +107,74 @@ export function FeaturedProjectBlock({ project, index }: Props) {
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active.src}
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.96, filter: "blur(8px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={reduceMotion ? undefined : { opacity: 0, scale: 1.02, filter: "blur(6px)" }}
-                transition={{ duration: 0.45, ease: easeOutExpo }}
-              >
-                <ProjectDeviceFrame
-                  src={active.src}
-                  alt={active.title}
-                  priority={index === 0 && activeShot === 0}
-                  variant={usePhoneFrame ? "phone" : "browser"}
-                />
-              </motion.div>
-            </AnimatePresence>
+            <motion.div className="relative z-10">
+              {hasMultipleShots ? (
+                <div className="flex items-center justify-center gap-2 sm:gap-4">
+                  <button
+                    type="button"
+                    aria-label="Pantalla anterior"
+                    onClick={goToPrev}
+                    aria-disabled={activeShot === 0}
+                    className={`focus-ring relative z-30 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#0a0a0c]/90 text-xl text-zinc-200 shadow-lg backdrop-blur-md transition hover:border-sky-400/40 hover:text-white sm:h-12 sm:w-12 ${
+                      activeShot === 0
+                        ? "pointer-events-none opacity-30"
+                        : ""
+                    }`}
+                  >
+                    ‹
+                  </button>
+
+                  <motion.div
+                    key={active.src}
+                    className="min-w-0 flex-1"
+                    initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.28, ease: easeOutExpo }}
+                  >
+                    <ProjectDeviceFrame
+                      src={active.src}
+                      alt={active.title}
+                      priority={index === 0 && activeShot === 0}
+                      variant={frameVariant}
+                    />
+                  </motion.div>
+
+                  <button
+                    type="button"
+                    aria-label="Pantalla siguiente"
+                    onClick={goToNext}
+                    aria-disabled={activeShot === project.gallery.length - 1}
+                    className={`focus-ring relative z-30 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#0a0a0c]/90 text-xl text-zinc-200 shadow-lg backdrop-blur-md transition hover:border-sky-400/40 hover:text-white sm:h-12 sm:w-12 ${
+                      activeShot === project.gallery.length - 1
+                        ? "pointer-events-none opacity-30"
+                        : ""
+                    }`}
+                  >
+                    ›
+                  </button>
+                </div>
+              ) : (
+                <motion.div
+                  key={active.src}
+                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.28, ease: easeOutExpo }}
+                >
+                  <ProjectDeviceFrame
+                    src={active.src}
+                    alt={active.title}
+                    priority={index === 0 && activeShot === 0}
+                    variant={frameVariant}
+                  />
+                </motion.div>
+              )}
+
+              {hasMultipleShots ? (
+                <p className="mt-4 text-center font-mono text-xs tabular-nums text-zinc-500">
+                  {activeShot + 1} / {project.gallery.length}
+                </p>
+              ) : null}
+            </motion.div>
 
             {active.disclaimer ? (
               <motion.p
@@ -126,6 +192,7 @@ export function FeaturedProjectBlock({ project, index }: Props) {
             activeIndex={activeShot}
             onSelect={setActiveShot}
             layoutIdPrefix={`project-rail-${index}`}
+            mobileLayout={isMobileGallery}
           />
         </motion.div>
 

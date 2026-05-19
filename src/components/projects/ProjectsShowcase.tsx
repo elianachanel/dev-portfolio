@@ -24,7 +24,7 @@ export function ProjectsShowcase() {
       <SectionHeader
         label="Selected work"
         title="Products I've shipped"
-        description="Interfaces, flows, and systems — scroll the gallery, tap a screen, explore the product."
+        description="Toca cada miniatura o usa las flechas para explorar pantallas del producto."
         align="center"
       />
 

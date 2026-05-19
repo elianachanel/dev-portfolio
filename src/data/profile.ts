@@ -69,8 +69,36 @@ export const cv = {
   ],
   featuredProjects: [
     {
-      title: "Restaurant Booking Platform",
-      subtitle: "Mobile + Web · Multi-role product",
+      title: "LunaHair",
+      galleryDevice: "mobile" as const,
+      subtitle: "Lunar hair care · Mobile app (UI / product)",
+      highlight: "Premium calendar that syncs hair rituals with real moon phases",
+      tags: ["React Native", "Expo", "TypeScript", "UI/UX", "SunCalc"],
+      intro:
+        "Wellness mobile experience for planning cuts, hydration, nutrition, and growth rituals aligned with an astronomically accurate lunar calendar.",
+      bullets: [
+        "Designed dark, glassmorphism UI inspired by premium wellness apps",
+        "Built lunar phase engine with exact day-by-day recommendations",
+        "Home, calendar, routines, and profile flows for end-to-end hair care",
+        "Concept evolved from UI design into a full React Native + Expo application",
+      ],
+      gallery: [
+        { src: "/projects/lunahair/calendar.png", title: "Home · weekly lunar calendar" },
+        { src: "/projects/lunahair/calendar%202.png", title: "Monthly lunar calendar" },
+        { src: "/projects/lunahair/login.png", title: "Login · Entrar al Ritual" },
+        { src: "/projects/lunahair/verificar_cuenta.png", title: "Email verification" },
+        { src: "/projects/lunahair/stepper_1.png", title: "Onboarding · hair type" },
+        { src: "/projects/lunahair/stepeer_2.png", title: "Onboarding · hair thickness" },
+        {
+          src: "/projects/lunahair/details%20account.png",
+          title: "Profile · hair details & lunar history",
+        },
+      ],
+    },
+    {
+      title: "Rezalia",
+      galleryDevice: "mixed" as const,
+      subtitle: "Restaurant booking · Mobile + Web",
       highlight: "Real-time reservations across mobile, web & admin",
       tags: ["React Native", "Next.js", "Maps", "Real-time", "Multi-tenant"],
       intro:
@@ -98,15 +126,18 @@ export const cv = {
         {
           src: "/projects/Captura de pantalla 2026-02-16 a las 10.57.31 p. m..png",
           title: "Customer web",
+          frame: "browser" as const,
         },
         {
           src: "/projects/Captura de pantalla 2026-02-16 a las 10.57.57 p. m..png",
           title: "Admin dashboard",
+          frame: "browser" as const,
         },
       ],
     },
     {
       title: "Mobile Application — Insurance Platform",
+      galleryDevice: "mobile" as const,
       subtitle: "Humano Seguros · Enterprise mobile",
       highlight: "Insurance flows redesigned for scale & clarity",
       tags: ["React Native", "REST APIs", "Redesign", "Healthcare"],

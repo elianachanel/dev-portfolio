@@ -134,9 +134,12 @@ body {
 }
 
 .project-rail {
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 1rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 
 .project-rail::-webkit-scrollbar {
