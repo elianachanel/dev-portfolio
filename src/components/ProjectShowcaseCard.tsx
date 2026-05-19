@@ -80,7 +80,7 @@ export function ProjectShowcaseCard({ src, title, index, disclaimer }: Props) {
         }}
         whileTap={reduceMotion ? undefined : { scale: 0.985 }}
         transition={{ type: "spring", stiffness: 460, damping: 28 }}
-        className="relative rounded-xl shadow-[0_14px_48px_rgba(0,0,0,0.42)] ring-1 ring-white/[0.08] transition-shadow duration-300 ease-out group-hover:shadow-[0_26px_72px_rgba(56,189,248,0.15)]"
+        className="glass-panel relative rounded-xl shadow-[0_14px_48px_rgba(0,0,0,0.42)] transition-shadow duration-300 ease-out group-hover:shadow-[0_26px_72px_rgba(56,189,248,0.18)]"
       >
         {/* Rim light follows cursor (spatial depth cue) */}
         {!reduceMotion && (

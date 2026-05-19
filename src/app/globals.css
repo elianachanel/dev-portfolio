@@ -1,11 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b0b0c;
-  --foreground: #f3f1ed;
-  --surface: #111112;
-  --muted: #a3a1a0;
+  --background: #030304;
+  --background-elevated: #0a0a0c;
+  --foreground: #f4f4f5;
+  --foreground-muted: #a1a1aa;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --muted: #71717a;
   --accent: #38bdf8;
+  --accent-violet: #818cf8;
+  --accent-glow: rgba(56, 189, 248, 0.35);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --glass: rgba(12, 12, 14, 0.72);
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2rem;
 }
 
 @theme inline {
@@ -16,28 +27,127 @@
   --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-syne);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  letter-spacing: -0.01em;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
-  border-color: rgb(255 255 255 / 8%);
-}
-
-a {
-  transition: color 220ms ease, opacity 220ms ease;
+  border-color: var(--border);
 }
 
 ::selection {
-  background: rgb(56 189 248 / 28%);
+  background: rgb(56 189 248 / 22%);
   color: #f0f9ff;
 }
 
+/* ─── Utilities ─── */
+.glass-panel {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+}
+
+.glass-panel-strong {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid var(--border-strong);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    #f4f4f5 0%,
+    #e4e4e7 35%,
+    #38bdf8 70%,
+    #818cf8 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-text-subtle {
+  background: linear-gradient(180deg, #fafafa 0%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mesh-gradient {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(56, 189, 248, 0.15), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(129, 140, 248, 0.12), transparent 45%),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(56, 189, 248, 0.06), transparent 50%);
+}
+
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+}
+
+.grid-fade {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 20%, transparent 75%);
+}
+
+.section-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.6);
+  outline-offset: 3px;
+}
+
+.project-rail {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.project-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.project-rail > button {
+  scroll-snap-align: center;
+}
+
+/* ─── Animations ─── */
 @keyframes experience-shimmer {
   0%,
   100% {
@@ -52,42 +162,20 @@ a {
   animation: experience-shimmer 6s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-experience-shimmer {
-    animation: none;
-  }
-}
-
-/* Welcome: ondas con sensación 3D (perspectiva + relieve) */
-@keyframes welcome-wave-3d {
-  0% {
-    transform: scale(0.28) translateZ(0);
-    opacity: 0.72;
-    box-shadow:
-      0 28px 90px rgba(56, 189, 248, 0.32),
-      0 12px 40px rgba(0, 0, 0, 0.45),
-      inset 0 2px 0 rgba(255, 255, 255, 0.18);
-  }
-  40% {
-    opacity: 0.28;
-  }
+@keyframes float-soft {
+  0%,
   100% {
-    transform: scale(2.05) translateZ(-24px);
-    opacity: 0;
-    box-shadow:
-      0 0 0 transparent,
-      0 0 0 transparent,
-      inset 0 0 0 transparent;
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
   }
 }
 
-.welcome-wave-3d {
-  animation: welcome-wave-3d 3.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  transform-style: preserve-3d;
-  will-change: transform, opacity, box-shadow;
+.animate-float-soft {
+  animation: float-soft 6s ease-in-out infinite;
 }
 
-/* Avatar: ondas + ligero movimiento */
 @keyframes profile-wave-3d {
   0% {
     transform: scale(0.82);
@@ -126,21 +214,21 @@ a {
   animation: avatar-face-glow 3.5s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .welcome-wave-3d,
-  .avatar-wave-ring,
-  .avatar-face-glow {
-    animation: none;
+@keyframes welcome-wave-3d {
+  0% {
+    transform: scale(0.28) translateZ(0);
+    opacity: 0.72;
   }
-
-  .avatar-face-glow {
-    box-shadow:
-      0 16px 48px rgba(0, 0, 0, 0.55),
-      0 0 0 1px rgba(56, 189, 248, 0.28) inset;
+  100% {
+    transform: scale(2.05) translateZ(-24px);
+    opacity: 0;
   }
 }
 
-/* Welcome intro: scanlines + caret “terminal” */
+.welcome-wave-3d {
+  animation: welcome-wave-3d 3.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
 .welcome-scanlines {
   background-image: repeating-linear-gradient(
     0deg,
@@ -167,6 +255,20 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate-experience-shimmer,
+  .animate-float-soft,
+  .avatar-wave-ring,
+  .avatar-face-glow,
+  .welcome-wave-3d {
+    animation: none;
+  }
+
+  .avatar-face-glow {
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(56, 189, 248, 0.28) inset;
+  }
+
   .welcome-caret {
     animation: none;
     opacity: 1;

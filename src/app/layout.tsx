@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Syne } from "next/font/google";
 import { MotionProvider } from "@/components/MotionProvider";
 import "./globals.css";
 
@@ -13,10 +14,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const syne = Syne({
+  variable: "--font-syne",
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+});
+
 export const metadata: Metadata = {
   title: "Eliana Batista | Software Engineer",
   description:
     "Software Engineer building scalable mobile and web apps with React Native, banking and insurance experience, and focus on performance and clean architecture.",
+  openGraph: {
+    title: "Eliana Batista | Software Engineer",
+    description:
+      "Portfolio — React Native, Next.js, enterprise mobile & web.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -27,9 +40,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col overflow-x-hidden">
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

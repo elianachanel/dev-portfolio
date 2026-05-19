@@ -70,7 +70,9 @@ export const cv = {
   featuredProjects: [
     {
       title: "Restaurant Booking Platform",
-      subtitle: "Mobile + Web",
+      subtitle: "Mobile + Web · Multi-role product",
+      highlight: "Real-time reservations across mobile, web & admin",
+      tags: ["React Native", "Next.js", "Maps", "Real-time", "Multi-tenant"],
       intro:
         "End-to-end multi-role platform for restaurant reservations across mobile app, web client, and admin dashboard.",
       bullets: [
@@ -105,7 +107,9 @@ export const cv = {
     },
     {
       title: "Mobile Application — Insurance Platform",
-      subtitle: "Humano Seguros",
+      subtitle: "Humano Seguros · Enterprise mobile",
+      highlight: "Insurance flows redesigned for scale & clarity",
+      tags: ["React Native", "REST APIs", "Redesign", "Healthcare"],
       intro:
         "Contributed to the redesign and evolution of a large-scale mobile insurance application, focusing on user experience improvements and development of key business features.",
       bullets: [

@@ -125,7 +125,7 @@ export function ExperienceShowcase({ jobs }: Props) {
                   transition: { type: "spring", stiffness: 420, damping: 26 },
                 }
           }
-          className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/25 px-5 py-6 shadow-[0_16px_56px_rgba(0,0,0,0.38)] ring-1 ring-white/[0.04] transition-[box-shadow] duration-300 sm:px-6 sm:py-7 lg:hover:border-accent/25 lg:hover:shadow-[0_28px_90px_rgba(56,189,248,0.16)] lg:hover:ring-accent/20"
+          className="glass-panel group relative overflow-hidden rounded-2xl px-5 py-6 shadow-[0_16px_56px_rgba(0,0,0,0.38)] ring-1 ring-white/[0.04] transition-[box-shadow,border-color] duration-300 sm:px-6 sm:py-7 lg:hover:border-sky-400/25 lg:hover:shadow-[0_28px_90px_rgba(56,189,248,0.14)] lg:hover:ring-sky-400/20"
         >
           {!reduceMotion && (
             <>
