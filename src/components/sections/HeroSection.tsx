@@ -23,17 +23,6 @@ export function HeroSection() {
         className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16"
       >
         <motion.div variants={fadeUpItem} className="text-center lg:text-left">
-          <motion.div
-            variants={fadeUpItem}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs text-zinc-400 backdrop-blur-sm"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/60 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-            </span>
-            Available for opportunities · {cv.location}
-          </motion.div>
-
           <motion.h1
             variants={fadeUpItem}
             className="font-[family-name:var(--font-syne)] text-[clamp(2.75rem,8vw,5.5rem)] font-bold leading-[0.95] tracking-[-0.04em]"
