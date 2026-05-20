@@ -52,7 +52,6 @@ export type LocaleContent = {
       label: string;
       title: string;
       titleAccent: string;
-      description: string;
       email: string;
       downloadCv: string;
       linkedin: string;
@@ -385,8 +384,6 @@ export const localeContent: Record<Locale, LocaleContentSource> = {
         label: "Contact",
         title: "Let's build something",
         titleAccent: "exceptional",
-        description:
-          "Open to senior engineering roles and impactful product collaborations.",
         email: "Email me",
         downloadCv: "Download CV",
         linkedin: "LinkedIn",
@@ -457,8 +454,6 @@ export const localeContent: Record<Locale, LocaleContentSource> = {
         label: "Contacto",
         title: "Construyamos algo",
         titleAccent: "excepcional",
-        description:
-          "Abierta a roles senior de ingeniería y colaboraciones de producto con impacto.",
         email: "Escríbeme",
         downloadCv: "Descargar CV",
         linkedin: "LinkedIn",

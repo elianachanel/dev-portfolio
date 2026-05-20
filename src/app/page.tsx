@@ -225,8 +225,6 @@ export default function Home() {
                   {sections.contact.title}{" "}
                   <span className="gradient-text">{sections.contact.titleAccent}</span>
                 </h2>
-                <p className="mt-5 max-w-lg text-zinc-400">{sections.contact.description}</p>
-
                 <div className="mt-10 flex flex-wrap gap-3">
                   <Button href={`mailto:${profile.email}`} variant="primary">
                     {sections.contact.email}
