@@ -17,7 +17,13 @@ import { Button } from "@/components/ui/Button";
 import { WelcomeIntro } from "@/components/WelcomeIntro";
 import { useLocale } from "@/context/LocaleProvider";
 import { cvFilePath, profile } from "@/data/profile";
-import { fadeUpItem, scrollSpring, staggerContainer } from "@/lib/motion";
+import {
+  fadeUpItem,
+  fadeUpItemReduced,
+  inViewOnce,
+  scrollSpring,
+  staggerContainer,
+} from "@/lib/motion";
 
 const AmbientBackground = dynamic(
   () =>
@@ -47,6 +53,7 @@ export default function Home() {
   const [showWelcome, setShowWelcome] = useState(true);
   const dismissWelcome = useCallback(() => setShowWelcome(false), []);
   const reduceMotion = useReducedMotion();
+  const motionItem = reduceMotion ? fadeUpItemReduced : fadeUpItem;
   const { content } = useLocale();
   const { cv, sections, footer } = content;
   const { scrollYProgress } = useScroll();
@@ -93,13 +100,13 @@ export default function Home() {
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: true, amount: 0.15 }}
-                className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+                viewport={inViewOnce}
+                className="mt-12 grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-4"
               >
                 {cv.whatIDo.map((card) => (
                   <motion.div
                     key={card}
-                    variants={fadeUpItem}
+                    variants={motionItem}
                     whileHover={{ y: -6, transition: { duration: 0.25 } }}
                     className="glass-panel group rounded-2xl p-6 text-sm leading-relaxed text-zinc-400 transition hover:border-white/14 hover:text-zinc-200"
                   >
@@ -132,12 +139,12 @@ export default function Home() {
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: true, amount: 0.15 }}
+                viewport={inViewOnce}
                 className="glass-panel-strong mt-12 rounded-[2rem] p-6 sm:p-10"
               >
                 <motion.div className="space-y-10" variants={staggerContainer}>
                   {cv.skillGroups.map((group) => (
-                    <motion.div key={group.label} variants={fadeUpItem}>
+                    <motion.div key={group.label} variants={motionItem}>
                       <p className="section-label">{group.label}</p>
                       <div className="mt-4 flex flex-wrap gap-2.5">
                         {group.items.map((skill) => (
@@ -155,7 +162,7 @@ export default function Home() {
                 </motion.div>
 
                 <motion.div
-                  variants={fadeUpItem}
+                  variants={motionItem}
                   className="mt-10 rounded-2xl border border-white/[0.06] bg-black/30 p-5"
                 >
                   <p className="section-label">{sections.skills.ecosystem}</p>
@@ -178,13 +185,13 @@ export default function Home() {
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={inViewOnce}
                 className="mt-10 max-w-3xl space-y-4"
               >
                 {cv.education.map((line) => (
                   <motion.li
                     key={line}
-                    variants={fadeUpItem}
+                    variants={motionItem}
                     className="glass-panel flex gap-4 rounded-2xl px-5 py-4 text-sm leading-relaxed text-zinc-400"
                   >
                     <span

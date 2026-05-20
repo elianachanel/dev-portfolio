@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { fadeUpItem, staggerContainer } from "@/lib/motion";
+import { fadeUpItem, fadeUpItemReduced, inViewOnce, staggerContainer } from "@/lib/motion";
+import { useReducedMotion } from "framer-motion";
 
 type Props = {
   label: string;
@@ -16,6 +17,8 @@ export function SectionHeader({
   description,
   align = "left",
 }: Props) {
+  const reduceMotion = useReducedMotion();
+  const item = reduceMotion ? fadeUpItemReduced : fadeUpItem;
   const alignClass = align === "center" ? "text-center mx-auto" : "text-left";
 
   return (
@@ -23,21 +26,21 @@ export function SectionHeader({
       variants={staggerContainer}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.4 }}
+      viewport={inViewOnce}
       className={`max-w-3xl break-words-safe ${alignClass}`}
     >
-      <motion.p variants={fadeUpItem} className="section-label">
+      <motion.p variants={item} className="section-label">
         {label}
       </motion.p>
       <motion.h2
-        variants={fadeUpItem}
+        variants={item}
         className="mt-4 font-[family-name:var(--font-syne)] text-[clamp(1.65rem,6vw,2.75rem)] font-semibold tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-[1.08]"
       >
         {title}
       </motion.h2>
       {description ? (
         <motion.p
-          variants={fadeUpItem}
+          variants={item}
           className="mt-5 text-[0.9375rem] leading-relaxed text-zinc-400 sm:text-base sm:text-lg"
         >
           {description}
