@@ -71,7 +71,9 @@ export function ProjectGalleryRail({
 
   if (items.length <= 1) return null;
 
-  const thumbWidth = mobileLayout ? "min(36vw, 168px)" : "min(42vw, 200px)";
+  const thumbWidth = mobileLayout
+    ? "min(30vw, 132px)"
+    : "min(38vw, 180px)";
 
   return (
     <div className="relative mt-8">
@@ -131,7 +133,9 @@ export function ProjectGalleryRail({
                   src={item.src}
                   alt=""
                   fill
-                  sizes={mobileLayout ? "168px" : "200px"}
+                  loading="lazy"
+                  quality={55}
+                  sizes={mobileLayout ? "132px" : "180px"}
                   className="object-contain object-center p-0.5"
                   draggable={false}
                 />

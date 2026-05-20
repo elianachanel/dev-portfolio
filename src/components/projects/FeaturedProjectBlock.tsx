@@ -4,10 +4,9 @@ import {
   AnimatePresence,
   motion,
   useReducedMotion,
-  useScroll,
-  useTransform,
 } from "framer-motion";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { useLocale } from "@/context/LocaleProvider";
 import { ProjectDeviceFrame } from "@/components/projects/ProjectDeviceFrame";
 import {
   ProjectGalleryRail,
@@ -17,6 +16,7 @@ import {
   resolveGalleryFrame,
   type GalleryDevice,
 } from "@/components/projects/resolveGalleryFrame";
+import { useIsMobileLayout } from "@/hooks/useMediaQuery";
 import { easeOutExpo } from "@/lib/motion";
 
 export type FeaturedProject = {
@@ -36,86 +36,69 @@ type Props = {
 };
 
 export function FeaturedProjectBlock({ project, index }: Props) {
-  const sectionRef = useRef<HTMLElement>(null);
+  const { content } = useLocale();
+  const { projects: projectUi } = content;
   const reduceMotion = useReducedMotion();
+  const isMobileLayout = useIsMobileLayout();
   const [activeShot, setActiveShot] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const reversed = index % 2 === 1;
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const heroY = useTransform(scrollYProgress, [0, 1], [60, -60]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.45, 1], [0.88, 1, 0.94]);
-  const bgX = useTransform(scrollYProgress, [0, 1], reversed ? [40, -40] : [-40, 40]);
 
   const active = project.gallery[activeShot] ?? project.gallery[0];
   const frameVariant = resolveGalleryFrame(active, project.galleryDevice);
   const isMobileGallery = project.galleryDevice === "mobile";
   const hasMultipleShots = project.gallery.length > 1;
+  const galleryLength = project.gallery.length;
+
+  const selectShot = (shotIndex: number) => {
+    setActiveShot(shotIndex);
+  };
 
   const goToPrev = () => {
     setActiveShot((current) => Math.max(0, current - 1));
   };
 
   const goToNext = () => {
-    setActiveShot((current) =>
-      Math.min(project.gallery.length - 1, current + 1),
-    );
+    setActiveShot((current) => Math.min(galleryLength - 1, current + 1));
   };
 
   return (
     <motion.article
-      ref={sectionRef}
-      className="relative py-8 sm:py-12 lg:py-16"
+      className="relative overflow-hidden py-10 sm:py-12 lg:py-16"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.05 }}
     >
-      <motion.span
+      <span
         aria-hidden
-        className="pointer-events-none absolute -top-6 right-0 select-none font-[family-name:var(--font-syne)] text-[clamp(5rem,18vw,11rem)] font-bold leading-none tracking-tighter text-white/[0.03]"
-        style={{ x: bgX }}
+        className="pointer-events-none absolute -top-4 right-0 max-w-full select-none overflow-hidden font-[family-name:var(--font-syne)] text-[clamp(2.5rem,14vw,11rem)] font-bold leading-none tracking-tighter text-white/[0.03] sm:-top-6"
       >
         {String(index + 1).padStart(2, "0")}
-      </motion.span>
+      </span>
 
       <div
-        className={`grid items-start gap-10 lg:gap-14 xl:gap-20 ${
+        className={`grid min-w-0 grid-cols-1 items-start gap-8 sm:gap-10 lg:gap-14 xl:gap-20 ${
           reversed ? "lg:grid-cols-[1.1fr_0.9fr]" : "lg:grid-cols-[0.9fr_1.1fr]"
         }`}
       >
-        <motion.div
-          className={`relative ${reversed ? "lg:order-2" : ""}`}
-          style={
-            reduceMotion
-              ? undefined
-              : { y: heroY, scale: heroScale }
-          }
+        <div
+          className={`relative order-2 min-w-0 ${reversed ? "lg:order-2" : "lg:order-none"}`}
         >
-          <div className="relative [perspective:1400px]">
-            <motion.div
+          <div className="relative min-w-0">
+            <div
               aria-hidden
-              className="pointer-events-none absolute -inset-4 rounded-[3rem] bg-gradient-to-br from-sky-500/20 via-transparent to-indigo-500/15 blur-2xl"
-              animate={
-                reduceMotion
-                  ? undefined
-                  : { opacity: [0.4, 0.7, 0.4], scale: [1, 1.05, 1] }
-              }
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="pointer-events-none absolute -inset-4 rounded-[3rem] bg-gradient-to-br from-sky-500/15 via-transparent to-indigo-500/10 blur-2xl"
             />
 
-            <motion.div className="relative z-10">
+            <div className="relative z-10">
               {hasMultipleShots ? (
-                <div className="flex items-center justify-center gap-2 sm:gap-4">
+                <div className="mx-auto flex w-full max-w-full items-center justify-center gap-1.5 px-0.5 sm:gap-3 lg:gap-4">
                   <button
                     type="button"
-                    aria-label="Pantalla anterior"
+                    aria-label={projectUi.prev}
                     onClick={goToPrev}
                     aria-disabled={activeShot === 0}
-                    className={`focus-ring relative z-30 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#0a0a0c]/90 text-xl text-zinc-200 shadow-lg backdrop-blur-md transition hover:border-sky-400/40 hover:text-white sm:h-12 sm:w-12 ${
+                    className={`focus-ring relative z-30 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#0a0a0c]/90 text-lg text-zinc-200 shadow-lg backdrop-blur-md transition hover:border-sky-400/40 hover:text-white sm:h-11 sm:w-11 lg:h-12 lg:w-12 lg:text-xl ${
                       activeShot === 0
                         ? "pointer-events-none opacity-30"
                         : ""
@@ -124,27 +107,32 @@ export function FeaturedProjectBlock({ project, index }: Props) {
                     ‹
                   </button>
 
-                  <motion.div
-                    key={active.src}
-                    className="min-w-0 flex-1"
-                    initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.28, ease: easeOutExpo }}
-                  >
-                    <ProjectDeviceFrame
-                      src={active.src}
-                      alt={active.title}
-                      priority={index === 0 && activeShot === 0}
-                      variant={frameVariant}
-                    />
-                  </motion.div>
+                  <div className="min-w-0 flex-1">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={active.src}
+                        initial={reduceMotion ? false : { opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ProjectDeviceFrame
+                          src={active.src}
+                          alt={active.title}
+                          priority={index === 0 && activeShot === 0}
+                          variant={frameVariant}
+                          skipEntrance
+                        />
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
 
                   <button
                     type="button"
-                    aria-label="Pantalla siguiente"
+                    aria-label={projectUi.next}
                     onClick={goToNext}
                     aria-disabled={activeShot === project.gallery.length - 1}
-                    className={`focus-ring relative z-30 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#0a0a0c]/90 text-xl text-zinc-200 shadow-lg backdrop-blur-md transition hover:border-sky-400/40 hover:text-white sm:h-12 sm:w-12 ${
+                    className={`focus-ring relative z-30 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#0a0a0c]/90 text-lg text-zinc-200 shadow-lg backdrop-blur-md transition hover:border-sky-400/40 hover:text-white sm:h-11 sm:w-11 lg:h-12 lg:w-12 lg:text-xl ${
                       activeShot === project.gallery.length - 1
                         ? "pointer-events-none opacity-30"
                         : ""
@@ -154,19 +142,23 @@ export function FeaturedProjectBlock({ project, index }: Props) {
                   </button>
                 </div>
               ) : (
-                <motion.div
-                  key={active.src}
-                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.28, ease: easeOutExpo }}
-                >
-                  <ProjectDeviceFrame
-                    src={active.src}
-                    alt={active.title}
-                    priority={index === 0 && activeShot === 0}
-                    variant={frameVariant}
-                  />
-                </motion.div>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={active.src}
+                    initial={reduceMotion ? false : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ProjectDeviceFrame
+                      src={active.src}
+                      alt={active.title}
+                      priority={index === 0 && activeShot === 0}
+                      variant={frameVariant}
+                      skipEntrance
+                    />
+                  </motion.div>
+                </AnimatePresence>
               )}
 
               {hasMultipleShots ? (
@@ -174,47 +166,47 @@ export function FeaturedProjectBlock({ project, index }: Props) {
                   {activeShot + 1} / {project.gallery.length}
                 </p>
               ) : null}
-            </motion.div>
+            </div>
 
             {active.disclaimer ? (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-4 text-center text-[11px] leading-snug text-zinc-500"
-              >
+              <p className="mt-4 text-center text-[11px] leading-snug text-zinc-500">
                 {active.disclaimer}
-              </motion.p>
+              </p>
             ) : null}
           </div>
 
           <ProjectGalleryRail
             items={project.gallery}
             activeIndex={activeShot}
-            onSelect={setActiveShot}
+            onSelect={selectShot}
             layoutIdPrefix={`project-rail-${index}`}
             mobileLayout={isMobileGallery}
           />
-        </motion.div>
+        </div>
 
-        <div className={`lg:sticky lg:top-28 lg:self-start ${reversed ? "lg:order-1" : ""}`}>
+        <div
+          className={`order-1 min-w-0 lg:sticky lg:top-28 lg:self-start ${
+            reversed ? "lg:order-1" : "lg:order-none"
+          }`}
+        >
           <motion.div
             initial={reduceMotion ? false : { opacity: 0, x: reversed ? 24 : -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, ease: easeOutExpo }}
+            transition={{ duration: 0.45, ease: easeOutExpo }}
           >
             <p className="font-mono text-xs tracking-[0.2em] text-sky-400/90">
-              PROJECT · {String(index + 1).padStart(2, "0")}
+              {projectUi.label} · {String(index + 1).padStart(2, "0")}
             </p>
 
-            <h3 className="mt-4 font-[family-name:var(--font-syne)] text-[clamp(2rem,5vw,3.25rem)] font-bold leading-[1.05] tracking-tight">
+            <h3 className="mt-4 break-words-safe font-[family-name:var(--font-syne)] text-[clamp(1.75rem,6vw,3.25rem)] font-bold leading-[1.08] tracking-tight">
               <span className="gradient-text">{project.title}</span>
             </h3>
 
             <p className="mt-3 text-sm font-medium text-zinc-500">{project.subtitle}</p>
 
             <motion.p
-              className="mt-6 text-lg font-medium leading-snug text-zinc-200 sm:text-xl"
+              className="mt-6 text-base font-medium leading-snug text-zinc-200 sm:text-lg lg:text-xl"
               initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -271,7 +263,7 @@ export function FeaturedProjectBlock({ project, index }: Props) {
               >
                 →
               </motion.span>
-              {detailsOpen ? "Hide impact details" : "View impact details"}
+              {detailsOpen ? projectUi.hideDetails : projectUi.showDetails}
             </motion.button>
 
             <AnimatePresence>

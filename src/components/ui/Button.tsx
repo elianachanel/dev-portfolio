@@ -30,7 +30,7 @@ export function Button({
 }: ButtonProps) {
   const reduceMotion = useReducedMotion();
   const base =
-    "focus-ring group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium tracking-tight transition-colors duration-300";
+    "focus-ring group inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium tracking-tight transition-colors duration-300 sm:min-h-0 sm:px-6 sm:py-3";
   const classes = `${base} ${variants[variant]} ${className}`;
 
   const motionProps = reduceMotion

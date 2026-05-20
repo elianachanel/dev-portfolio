@@ -2,13 +2,14 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { PortfolioRobotCharacter } from "@/components/mascot/PortfolioRobotCharacter";
 import { profile } from "@/data/profile";
 
 /** Mensaje principal — misma idea (bienvenida), ejecución más contundente */
 const TITLE = "Welcome — this is my engineering portfolio.";
 
 /** Tiempo total visible del intro (ms) */
-const INTRO_DURATION_MS = 7000;
+const INTRO_DURATION_MS = 4800;
 
 type Props = {
   reduceMotion: boolean | null;
@@ -19,6 +20,7 @@ export function WelcomeIntro({ reduceMotion, onComplete }: Props) {
   const [titleShown, setTitleShown] = useState("");
   const [emailShown, setEmailShown] = useState("");
   const [titleDone, setTitleDone] = useState(false);
+  const [hiVisible, setHiVisible] = useState(false);
   const timersRef = useRef<number[]>([]);
 
   useEffect(() => {
@@ -28,6 +30,7 @@ export function WelcomeIntro({ reduceMotion, onComplete }: Props) {
     };
 
     if (reduceMotion === true) {
+      setHiVisible(true);
       setTitleShown(TITLE);
       setEmailShown(profile.email);
       setTitleDone(true);
@@ -69,11 +72,11 @@ export function WelcomeIntro({ reduceMotion, onComplete }: Props) {
       ti += 1;
       setTitleShown(TITLE.slice(0, ti));
       if (ti < TITLE.length) {
-        const burst = TITLE[ti - 1] === " " ? 55 : 22 + Math.random() * 38;
+        const burst = TITLE[ti - 1] === " " ? 32 : 12 + Math.random() * 16;
         q(typeTitle, burst);
       } else {
         setTitleDone(true);
-        q(startEmail, 280);
+        q(startEmail, 120);
       }
     };
 
@@ -84,7 +87,7 @@ export function WelcomeIntro({ reduceMotion, onComplete }: Props) {
         ei += 1;
         setEmailShown(profile.email.slice(0, ei));
         if (ei < profile.email.length) {
-          q(typeEmail, 18 + Math.random() * 28);
+          q(typeEmail, 10 + Math.random() * 14);
         } else {
           scheduleDismissAfterFullDuration();
         }
@@ -92,7 +95,8 @@ export function WelcomeIntro({ reduceMotion, onComplete }: Props) {
       typeEmail();
     };
 
-    q(typeTitle, 140);
+    q(() => setHiVisible(true), 40);
+    q(typeTitle, 120);
 
     return () => {
       cancelled = true;
@@ -140,12 +144,21 @@ export function WelcomeIntro({ reduceMotion, onComplete }: Props) {
         </>
       )}
 
-      <div className="relative z-10 flex max-w-[min(94vw,760px)] flex-col items-stretch px-5">
+      <div className="relative z-10 flex w-full max-w-[min(96vw,820px)] flex-col items-stretch px-4 sm:px-5">
+        <motion.div
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
+          animate={{ opacity: hiVisible ? 1 : 0, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-6 flex w-full justify-center sm:mb-8"
+        >
+          <PortfolioRobotCharacter size="hero" greeting={hiVisible} />
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, x: reduceMotion ? 0 : -8 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }}
-          className="relative border-l-2 border-cyan-400 pl-4 sm:pl-5"
+          className="relative mx-auto w-full max-w-[760px] border-l-2 border-cyan-400 pl-4 sm:pl-5"
         >
           <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] tracking-[0.14em] text-cyan-500/90 uppercase sm:text-[11px]">
             <span className="text-emerald-400/90">● ONLINE</span>
@@ -163,6 +176,15 @@ export function WelcomeIntro({ reduceMotion, onComplete }: Props) {
               className="pointer-events-none absolute -left-[2px] top-8 bottom-1 w-[2px] bg-gradient-to-b from-cyan-400 via-cyan-400/40 to-transparent opacity-80"
             />
           )}
+
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: hiVisible ? 1 : 0, y: hiVisible ? 0 : 6 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-3 font-[family-name:var(--font-syne)] text-[clamp(2.5rem,12vw,4rem)] font-bold leading-none tracking-tight text-sky-400"
+          >
+            Hi
+          </motion.p>
 
           <motion.h1
             className="font-mono text-[clamp(0.95rem,3.8vw,1.65rem)] leading-[1.45] font-semibold tracking-[-0.02em] text-zinc-50 sm:text-[clamp(1.1rem,3.2vw,1.95rem)]"

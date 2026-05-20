@@ -7,30 +7,50 @@ import {
   useScroll,
   useSpring,
 } from "framer-motion";
+import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 import { ExperienceShowcase } from "@/components/ExperienceShowcase";
-import { AmbientBackground } from "@/components/layout/AmbientBackground";
 import { SiteNav } from "@/components/layout/SiteNav";
-import { ProjectsShowcase } from "@/components/projects/ProjectsShowcase";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { WelcomeIntro } from "@/components/WelcomeIntro";
-import { fadeUpItem, staggerContainer } from "@/lib/motion";
-import { cv, profile } from "@/data/profile";
+import { useLocale } from "@/context/LocaleProvider";
+import { cvFilePath, profile } from "@/data/profile";
+import { fadeUpItem, scrollSpring, staggerContainer } from "@/lib/motion";
 
-const cvFilePath = "/cv/Eliana-Batista-CV.pdf";
+const AmbientBackground = dynamic(
+  () =>
+    import("@/components/layout/AmbientBackground").then((m) => ({
+      default: m.AmbientBackground,
+    })),
+  { ssr: false },
+);
+
+const PortfolioRobot = dynamic(
+  () =>
+    import("@/components/mascot/PortfolioRobot").then((m) => ({
+      default: m.PortfolioRobot,
+    })),
+  { ssr: false },
+);
+
+const ProjectsShowcase = dynamic(
+  () =>
+    import("@/components/projects/ProjectsShowcase").then((m) => ({
+      default: m.ProjectsShowcase,
+    })),
+  { ssr: false, loading: () => <div className="min-h-[40vh]" aria-hidden /> },
+);
 
 export default function Home() {
   const [showWelcome, setShowWelcome] = useState(true);
   const dismissWelcome = useCallback(() => setShowWelcome(false), []);
   const reduceMotion = useReducedMotion();
+  const { content } = useLocale();
+  const { cv, sections, footer } = content;
   const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    mass: 0.2,
-  });
+  const progress = useSpring(scrollYProgress, scrollSpring);
 
   return (
     <motion.div id="top" className="relative min-h-screen bg-background">
@@ -52,21 +72,22 @@ export default function Home() {
       {!showWelcome ? (
         <>
           <AmbientBackground />
+          <PortfolioRobot />
           <SiteNav />
 
           <motion.main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="relative z-10 mx-auto w-full max-w-6xl px-5 sm:px-8"
+            transition={{ duration: 0.32 }}
+            className="page-shell relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
           >
             <HeroSection />
 
-            <section id="work" className="scroll-mt-28 py-20 sm:py-24">
+            <section id="work" className="scroll-mt-24 py-16 sm:scroll-mt-28 sm:py-20 lg:py-24">
               <SectionHeader
-                label="Strengths"
-                title="How I work"
-                description="End-to-end ownership across architecture, implementation, quality, and long-term maintainability—especially in regulated domains like banking and insurance."
+                label={sections.strengths.label}
+                title={sections.strengths.title}
+                description={sections.strengths.description}
               />
               <motion.div
                 variants={staggerContainer}
@@ -92,15 +113,21 @@ export default function Home() {
               </motion.div>
             </section>
 
-            <section id="experience" className="scroll-mt-28 py-20 sm:py-24">
-              <SectionHeader label="Experience" title="Career trajectory" />
+            <section id="experience" className="scroll-mt-24 py-16 sm:scroll-mt-28 sm:py-20 lg:py-24">
+              <SectionHeader
+                label={sections.experience.label}
+                title={sections.experience.title}
+              />
               <ExperienceShowcase jobs={cv.experience} />
             </section>
 
             <ProjectsShowcase />
 
-            <section id="skills" className="scroll-mt-28 py-20 sm:py-24">
-              <SectionHeader label="Expertise" title="Technical stack" />
+            <section id="skills" className="scroll-mt-24 py-16 sm:scroll-mt-28 sm:py-20 lg:py-24">
+              <SectionHeader
+                label={sections.skills.label}
+                title={sections.skills.title}
+              />
               <motion.div
                 variants={staggerContainer}
                 initial="hidden"
@@ -131,7 +158,7 @@ export default function Home() {
                   variants={fadeUpItem}
                   className="mt-10 rounded-2xl border border-white/[0.06] bg-black/30 p-5"
                 >
-                  <p className="section-label">Ecosystem</p>
+                  <p className="section-label">{sections.skills.ecosystem}</p>
                   <img
                     src="https://skillicons.dev/icons?i=react,nextjs,ts,js,firebase,nodejs,git,jest"
                     alt="Technology stack icons"
@@ -142,8 +169,11 @@ export default function Home() {
               </motion.div>
             </section>
 
-            <section className="scroll-mt-28 py-20 sm:py-24">
-              <SectionHeader label="Education" title="Learning & growth" />
+            <section className="scroll-mt-24 py-16 sm:scroll-mt-28 sm:py-20 lg:py-24">
+              <SectionHeader
+                label={sections.education.label}
+                title={sections.education.title}
+              />
               <motion.ul
                 variants={staggerContainer}
                 initial="hidden"
@@ -173,7 +203,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="glass-panel-strong relative overflow-hidden rounded-[2rem] p-8 sm:p-12 lg:p-14"
+                className="glass-panel-strong relative overflow-hidden rounded-2xl p-6 sm:rounded-[2rem] sm:p-10 lg:p-14"
               >
                 <motion.div
                   aria-hidden
@@ -183,30 +213,28 @@ export default function Home() {
                   }
                   transition={{ duration: 8, repeat: Infinity }}
                 />
-                <p className="section-label">Contact</p>
-                <h2 className="mt-4 max-w-xl font-[family-name:var(--font-syne)] text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
-                  Let&apos;s build something{" "}
-                  <span className="gradient-text">exceptional</span>
+                <p className="section-label">{sections.contact.label}</p>
+                <h2 className="mt-4 max-w-xl break-words-safe font-[family-name:var(--font-syne)] text-[clamp(1.65rem,6vw,3rem)] font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+                  {sections.contact.title}{" "}
+                  <span className="gradient-text">{sections.contact.titleAccent}</span>
                 </h2>
-                <p className="mt-5 max-w-lg text-zinc-400">
-                  Open to senior engineering roles and impactful product collaborations.
-                </p>
+                <p className="mt-5 max-w-lg text-zinc-400">{sections.contact.description}</p>
 
                 <div className="mt-10 flex flex-wrap gap-3">
                   <Button href={`mailto:${profile.email}`} variant="primary">
-                    Email me
+                    {sections.contact.email}
                   </Button>
                   <Button href={cvFilePath} variant="outline">
-                    Download CV
+                    {sections.contact.downloadCv}
                   </Button>
                   <Button href={profile.linkedin} variant="ghost">
-                    LinkedIn
+                    {sections.contact.linkedin}
                   </Button>
                 </div>
 
-                <div className="mt-14 grid gap-6 border-t border-white/[0.06] pt-12 lg:grid-cols-3">
+                <div className="mt-10 grid gap-6 border-t border-white/[0.06] pt-8 sm:mt-14 sm:pt-12 lg:grid-cols-3">
                   <div>
-                    <p className="section-label">Location</p>
+                    <p className="section-label">{sections.contact.location}</p>
                     <p className="mt-2 text-zinc-300">{cv.location}</p>
                     <a
                       href={`tel:${cv.phoneTel}`}
@@ -216,7 +244,7 @@ export default function Home() {
                     </a>
                   </div>
                   <div>
-                    <p className="section-label">Languages</p>
+                    <p className="section-label">{sections.contact.languages}</p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {cv.languages.map((language) => (
                         <span
@@ -229,7 +257,7 @@ export default function Home() {
                     </div>
                   </div>
                   <motion.div>
-                    <p className="section-label">Beyond code</p>
+                    <p className="section-label">{sections.contact.beyond}</p>
                     <ul className="mt-3 space-y-2 text-sm text-zinc-500">
                       {cv.additional.map((line) => (
                         <li key={line}>{line}</li>
@@ -240,8 +268,10 @@ export default function Home() {
               </motion.div>
 
               <footer className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/[0.06] pt-8 text-center text-xs text-zinc-600 sm:flex-row sm:text-left">
-                <p>© {new Date().getFullYear()} {cv.displayName}</p>
-                <p className="font-mono tracking-wider">Engineered with Next.js · Framer Motion</p>
+                <p>
+                  © {new Date().getFullYear()} {cv.displayName}
+                </p>
+                <p className="font-mono tracking-wider">{footer}</p>
               </footer>
             </section>
           </motion.main>

@@ -11,6 +11,8 @@ type Props = {
   variant?: "phone" | "browser";
   className?: string;
   children?: ReactNode;
+  /** Skip scroll entrance when swapping gallery shots */
+  skipEntrance?: boolean;
 };
 
 export function ProjectDeviceFrame({
@@ -20,27 +22,22 @@ export function ProjectDeviceFrame({
   variant = "phone",
   className = "",
   children,
+  skipEntrance = false,
 }: Props) {
   const reduceMotion = useReducedMotion();
   const isPhone = variant === "phone";
 
-  return (
-    <motion.div
-      className={`relative mx-auto w-full ${className}`}
-      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <motion.div
+  const inner = (
+    <>
+      <div
         aria-hidden
-        className="pointer-events-none absolute -inset-6 rounded-[3.5rem] bg-gradient-to-br from-sky-500/25 via-indigo-500/10 to-transparent blur-3xl"
+        className="pointer-events-none absolute -inset-6 rounded-[3.5rem] bg-gradient-to-br from-sky-500/20 via-indigo-500/8 to-transparent blur-2xl"
       />
 
       <motion.div
         className={`relative overflow-hidden border border-white/20 bg-gradient-to-b from-[#141418] to-[#0a0a0c] shadow-[0_40px_120px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.08)_inset] ${
           isPhone
-            ? "mx-auto max-w-[min(320px,78vw)] rounded-[2.75rem] p-3 sm:max-w-[min(340px,88vw)] sm:rounded-[3rem] sm:p-3.5"
+            ? "mx-auto w-full max-w-[min(260px,calc(100vw-5.5rem))] rounded-[2.5rem] p-2.5 sm:max-w-[min(300px,72vw)] sm:rounded-[2.75rem] sm:p-3 lg:max-w-[min(340px,88vw)] lg:rounded-[3rem] lg:p-3.5"
             : "rounded-3xl p-2.5 sm:rounded-[2rem]"
         }`}
         whileHover={
@@ -88,6 +85,8 @@ export function ProjectDeviceFrame({
               alt={alt}
               fill
               priority={priority}
+              loading={priority ? undefined : "lazy"}
+              quality={priority ? 85 : 72}
               sizes={
                 isPhone
                   ? "(max-width:640px) 78vw, 340px"
@@ -105,6 +104,22 @@ export function ProjectDeviceFrame({
           {children}
         </motion.div>
       </motion.div>
+    </>
+  );
+
+  if (skipEntrance) {
+    return <div className={`relative mx-auto w-full ${className}`}>{inner}</div>;
+  }
+
+  return (
+    <motion.div
+      className={`relative mx-auto w-full ${className}`}
+      initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {inner}
     </motion.div>
   );
 }

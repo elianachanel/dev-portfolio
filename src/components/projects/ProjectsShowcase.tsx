@@ -3,13 +3,18 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { FeaturedProjectBlock } from "@/components/projects/FeaturedProjectBlock";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { cv } from "@/data/profile";
+import { useLocale } from "@/context/LocaleProvider";
 
 export function ProjectsShowcase() {
   const reduceMotion = useReducedMotion();
+  const { content } = useLocale();
+  const { sections, cv } = content;
 
   return (
-    <section id="projects" className="relative scroll-mt-28 py-20 sm:py-28">
+    <section
+      id="projects"
+      className="relative scroll-mt-24 overflow-hidden py-16 sm:scroll-mt-28 sm:py-20 lg:py-28"
+    >
       <motion.div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-32 h-[480px] w-[min(100%,900px)] -translate-x-1/2 rounded-full bg-indigo-500/[0.07] blur-[120px]"
@@ -22,13 +27,12 @@ export function ProjectsShowcase() {
       />
 
       <SectionHeader
-        label="Selected work"
-        title="Products I've shipped"
-        description="Toca cada miniatura o usa las flechas para explorar pantallas del producto."
+        label={sections.projects.label}
+        title={sections.projects.title}
         align="center"
       />
 
-      <div className="relative mt-20 space-y-4 sm:mt-24">
+      <div className="relative mt-12 min-w-0 space-y-6 sm:mt-20 sm:space-y-8 lg:mt-24">
         {cv.featuredProjects.map((project, index) => (
           <FeaturedProjectBlock
             key={project.title}

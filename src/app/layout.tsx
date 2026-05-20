@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Syne } from "next/font/google";
 import { MotionProvider } from "@/components/MotionProvider";
+import { LocaleProvider } from "@/context/LocaleProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,8 +18,15 @@ const geistMono = Geist_Mono({
 const syne = Syne({
   variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["600", "700"],
+  display: "swap",
 });
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Eliana Batista | Software Engineer",
@@ -43,7 +51,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">
-        <MotionProvider>{children}</MotionProvider>
+        <LocaleProvider>
+          <MotionProvider>{children}</MotionProvider>
+        </LocaleProvider>
       </body>
     </html>
   );
