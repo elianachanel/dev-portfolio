@@ -67,10 +67,6 @@ export type LocaleContent = {
     showDetails: string;
     hideDetails: string;
   };
-  keyboard: {
-    prompt: string;
-    snippets: string[];
-  };
   cv: Omit<CvCopy, "featuredProjects"> & {
     featuredProjects: FeaturedProject[];
   };
@@ -399,17 +395,6 @@ export const localeContent: Record<Locale, LocaleContentSource> = {
       showDetails: "View impact details",
       hideDetails: "Hide impact details",
     },
-    keyboard: {
-      prompt: "building portfolio…",
-      snippets: [
-        "const ship = async () => {",
-        "  await deploy();",
-        "  return 'live';",
-        "};",
-        "export default Portfolio;",
-        "// React Native + Next.js",
-      ],
-    },
     cv: enCv,
     footer: "Engineered with Next.js · Framer Motion",
   },
@@ -468,17 +453,6 @@ export const localeContent: Record<Locale, LocaleContentSource> = {
       next: "Pantalla siguiente",
       showDetails: "Ver detalles de impacto",
       hideDetails: "Ocultar detalles",
-    },
-    keyboard: {
-      prompt: "construyendo portfolio…",
-      snippets: [
-        "const lanzar = async () => {",
-        "  await deploy();",
-        "  return 'en vivo';",
-        "};",
-        "export default Portfolio;",
-        "// React Native + Next.js",
-      ],
     },
     cv: esCv,
     footer: "Hecho con Next.js · Framer Motion",

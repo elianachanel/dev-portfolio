@@ -2,8 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { useLocale } from "@/context/LocaleProvider";
-
 const ROWS: string[][] = [
   ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="],
   ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]"],
@@ -30,12 +28,21 @@ function charForKey(key: string) {
   return key;
 }
 
-export function MechanicalKeyboard({ className = "" }: { className?: string }) {
-  const { content } = useLocale();
-  const reduceMotion = useReducedMotion();
-  const snippets = content.keyboard.snippets;
+/** Always English — matches dev workflow regardless of site locale */
+const KEYBOARD_PROMPT = "building portfolio…";
+const KEYBOARD_CODE_SNIPPETS = [
+  "const ship = async () => {",
+  "  await deploy();",
+  "  return 'live';",
+  "};",
+  "export default Portfolio;",
+  "// React Native + Next.js",
+] as const;
 
-  const fullText = useMemo(() => snippets.join("\n"), [snippets]);
+export function MechanicalKeyboard({ className = "" }: { className?: string }) {
+  const reduceMotion = useReducedMotion();
+
+  const fullText = useMemo(() => KEYBOARD_CODE_SNIPPETS.join("\n"), []);
   const [typed, setTyped] = useState("");
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [lineIndex, setLineIndex] = useState(0);
@@ -44,7 +51,7 @@ export function MechanicalKeyboard({ className = "" }: { className?: string }) {
     setTyped("");
     setLineIndex(0);
     setActiveKey(null);
-  }, [fullText]);
+  }, []);
 
   useEffect(() => {
     if (reduceMotion) {
@@ -102,7 +109,7 @@ export function MechanicalKeyboard({ className = "" }: { className?: string }) {
           <span className="h-2 w-2 rounded-full bg-amber-400/80" />
           <span className="h-2 w-2 rounded-full bg-emerald-400/80" />
           <span className="ml-auto font-mono text-[9px] tracking-wider text-zinc-500 uppercase">
-            {content.keyboard.prompt}
+            {KEYBOARD_PROMPT}
           </span>
         </div>
         <pre className="min-h-[5.5rem] font-mono text-[10px] leading-relaxed text-sky-300/90 sm:text-[11px]">
