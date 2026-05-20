@@ -23,7 +23,9 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
           <button
             key={opt.id}
             type="button"
-            onClick={() => setLocale(opt.id)}
+            onClick={() => {
+              if (!active) setLocale(opt.id);
+            }}
             className={`focus-ring rounded-full px-2.5 py-1.5 font-mono text-[11px] font-semibold tracking-wide transition sm:px-3 ${
               active
                 ? "bg-sky-500/20 text-sky-300 shadow-[0_0_20px_rgba(56,189,248,0.2)]"
